@@ -7,7 +7,7 @@ let state = {
     activeFilters: [],
 };
 
-const allTagFilters = ['Playground', 'Halal', 'Changing Tables', 'Stroller Friendly', 'Indoor Play Area', 'Water Play', 'Petting Zoo'];
+const allTagFilters = ['Playground', 'Halal', 'Changing Tables', 'Stroller Friendly', 'Indoor Play Area', 'Water Play', 'Petting Zoo', 'Educational', 'Theme Park', 'Adventure'];
 const app = document.getElementById('app');
 
 // --- RENDER FUNCTIONS ---
@@ -16,15 +16,14 @@ function render() {
         const venue = state.venues.find(v => v.id === state.selectedVenueId);
         if (venue) {
             app.innerHTML = renderVenueDetailsPage(venue);
-            addEventListeners(); // Add listeners for the details page
         } else {
-            // If venue not found, go back to main page
             state.selectedVenueId = null;
             renderMainPageStructure();
         }
     } else {
         renderMainPageStructure();
     }
+    addEventListeners();
 }
 
 function renderMainPageStructure() {
@@ -97,6 +96,12 @@ function renderVenueCard(venue) {
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
                     <span>${venue.location}</span>
                 </div>
+                <div class="flex items-center my-2">
+                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    <span class="text-gray-700 font-bold text-sm ml-1">${venue.rating}</span>
+                    <span class="text-gray-500 text-sm ml-2">(${venue.reviews} reviews)</span>
+                </div>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">${venue.description}</p>
             </div>
         </div>
     `;
@@ -130,6 +135,11 @@ function renderVenueDetailsPage(venue) {
                         <p><strong>Hours:</strong> ${venue.hours}</p>
                         ${venue.contact.phone ? `<p><strong>Phone:</strong> <a href="tel:${venue.contact.phone}" class="text-blue-600 hover:underline">${venue.contact.phone}</a></p>` : ''}
                         ${venue.contact.googleMapsUrl ? `<a href="${venue.contact.googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center justify-center w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors shadow-lg"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg> Open in Google Maps</a>` : ''}
+                        <div class="flex items-center gap-4 mt-4 text-gray-600">
+                            ${venue.contact.website ? `<a href="${venue.contact.website}" class="hover:text-slate-800"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 22.621l-3.521-6.795c-1.614.938-3.483 1.504-5.479 1.504-6.627 0-11-5.373-11-12s4.373-12 11-12 11 5.373 11 12c0 1.203-.183 2.348-.506 3.422l3.521 6.795-.016.016zM11 2c-5.523 0-10 4.477-10 10s4.477 10 10 10c1.769 0 3.438-.463 4.878-1.288l.002.002-2.88-5.562-3.5 1.842-3-5.5-3.5 1.842-1.5-2.75 3.5-1.842 3 5.5 3.5-1.842 3 5.5 1.5-2.75-3.5-1.842-1.921-3.709c1.238-1.169 2-2.803 2-4.625z"/></svg></a>` : ''}
+                            ${venue.contact.facebook ? `<a href="${venue.contact.facebook}" class="hover:text-slate-800"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.03998c-5.523 0-10 4.477-10 10s4.477 10 10 10c5.522 0 10-4.477 10-10s-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-8.414v3.414h2v-3.414c0-.552.447-1 1-1h1.414v-2h-1.414c-1.654 0-3 1.346-3 3zm4-3.586h-2v-2h2v2z"/></svg></a>` : ''}
+                            ${venue.contact.instagram ? `<a href="${venue.contact.instagram}" class="hover:text-slate-800"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.585-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.585-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.585.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z" /></svg></a>` : ''}
+                        </div>
                     </div>
                     <div>
                         <h3 class="text-xl font-bold mb-4">What Parents Are Saying</h3>
@@ -164,7 +174,6 @@ function addEventListeners() {
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             state.category = btn.dataset.category;
-            // We need to re-render the main page structure to update button styles
             render();
         });
     });
@@ -172,6 +181,7 @@ function addEventListeners() {
         state.selectedVenueId = null;
         render();
     });
+    addResultEventListeners(); // Call this to add listeners to the initial results
 }
 
 function addResultEventListeners() {
